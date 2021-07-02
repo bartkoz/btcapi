@@ -39,7 +39,7 @@ services:
     container_name: app
     build:
       context: .
-      dockerfile: devel.Dockerfile
+      dockerfile: Dockerfile
     environment: *common-variables
     depends_on:
       - postgres
@@ -53,7 +53,7 @@ services:
   celery:
     build:
       context: .
-      dockerfile: devel.Dockerfile
+      dockerfile: Dockerfile
     command: celery btcapi.celery worker --loglevel=INFO -B
     volumes:
       - '.:/opt/app'
