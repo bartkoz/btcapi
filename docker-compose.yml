@@ -1,0 +1,80 @@
+version: '3.8'
+
+networks:
+  examplenetwork:
+    external: true
+
+
+x-common-variables: &common-variables
+  SECRET_KEY: 'secret'
+  DB_NAME: ''
+  DB_USER: ''
+  DB_PASSWORD: ''
+  DB_HOST: 'postgres'
+  DB_PORT: '5432'
+  DB_CONN_MAX_AGE: '2000'
+  SERVICE_API_KEY: ''
+  API_KEY: ''
+  DJANGO_SETTINGS_MODULE: 'btcapi.settings'
+
+services:
+  postgres:
+    image: postgres:13.0-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_DB: ''
+      POSTGRES_USER: ''
+      POSTGRES_PASSWORD: ''
+    restart: 'always'
+    networks:
+      - examplenetwork
+    ports:
+      - '5400:5432'
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+
+
+  app:
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    container_name: app
+    build:
+      context: .
+      dockerfile: devel.Dockerfile
+    environment: *common-variables
+    depends_on:
+      - postgres
+    networks:
+      - examplenetwork
+    ports:
+      - '8000:8000'
+    volumes:
+      - '.:/opt/app:z'
+
+  celery:
+    build:
+      context: .
+      dockerfile: devel.Dockerfile
+    command: celery btcapi.celery worker --loglevel=INFO -B
+    volumes:
+      - '.:/opt/app'
+    restart: 'unless-stopped'
+    environment:
+      <<: *common-variables
+    depends_on:
+      - app
+      - redis
+    networks:
+      - examplenetwork
+
+    links:
+      - postgres
+      - redis
+      - app
+
+  redis:
+    image: redis:5-alpine
+    networks:
+      - examplenetwork
+
+volumes:
+  dbdata:
