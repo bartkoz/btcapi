@@ -36,6 +36,11 @@ class APITests(TestCase):
             r = self.client.get(reverse("api:quotes"), {"api_key": "test"})
             self.assertEqual(r.status_code, 200)
 
+    def test_get_with_bad_token(self):
+        with self.settings(API_KEY="test"):
+            r = self.client.get(reverse("api:quotes"), {"api_key": "badtoken"})
+            self.assertEqual(r.status_code, 403)
+
     def test_post_no_token(self):
         r = self.client.get(reverse("api:quotes"))
         self.assertEqual(r.status_code, 403)
@@ -45,6 +50,12 @@ class APITests(TestCase):
         with self.settings(API_KEY="test"):
             r = self.client.post('/api/v1/quotes?api_key=test', follow=True)
             self.assertEqual(r.status_code, 200)
+
+    @mock.patch('api.tasks.fetch_data')
+    def test_post_with_bad_token(self, mock_fetch):
+        with self.settings(API_KEY="test"):
+            r = self.client.post('/api/v1/quotes?api_key=badtoken', follow=True)
+            self.assertEqual(r.status_code, 403)
 
 
 class TaskTests(TestCase):
