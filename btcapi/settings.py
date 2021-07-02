@@ -7,7 +7,7 @@ SERVICE_API_KEY = os.environ.get("SERVICE_API_KEY")
 API_KEY = os.environ.get("API_KEY")
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
