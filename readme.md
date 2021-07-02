@@ -1,0 +1,1 @@
+Fill in secrets in docker-compose, `docker-compose up -d` and you are ready to go!
