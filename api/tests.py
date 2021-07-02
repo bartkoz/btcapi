@@ -45,21 +45,21 @@ class APITests(TestCase):
         r = self.client.get(reverse("api:quotes"))
         self.assertEqual(r.status_code, 403)
 
-    @mock.patch('api.tasks.fetch_data')
+    @mock.patch("api.tasks.fetch_data")
     def test_post_with_token(self, mock_fetch):
         with self.settings(API_KEY="test"):
-            r = self.client.post('/api/v1/quotes?api_key=test', follow=True)
+            r = self.client.post("/api/v1/quotes?api_key=test", follow=True)
             self.assertEqual(r.status_code, 200)
 
-    @mock.patch('api.tasks.fetch_data')
+    @mock.patch("api.tasks.fetch_data")
     def test_post_with_bad_token(self, mock_fetch):
         with self.settings(API_KEY="test"):
-            r = self.client.post('/api/v1/quotes?api_key=badtoken', follow=True)
+            r = self.client.post("/api/v1/quotes?api_key=badtoken", follow=True)
             self.assertEqual(r.status_code, 403)
 
 
 class TaskTests(TestCase):
-    @mock.patch('requests.get')
+    @mock.patch("requests.get")
     def test_fetch_data(self, mock_resp):
         mock_resp.return_value.json.return_value = mock_response
         fetch_data()
