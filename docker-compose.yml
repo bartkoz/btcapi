@@ -58,8 +58,7 @@ services:
     volumes:
       - '.:/opt/app'
     restart: 'unless-stopped'
-    environment:
-      <<: *common-variables
+    environment: *common-variables
     depends_on:
       - app
       - redis
