@@ -17,7 +17,7 @@ class EntryPointPaginator(PageNumberPagination):
 
 class APIKeyAuthentication(BaseAuthentication):
     def authenticate(self, request):
-        params = {k.lower(): v.lower() for k, v in request.GET.items()}
+        params = {k.lower(): v for k, v in request.GET.items()}
         if params.get("api_key") != settings.API_KEY:
             raise PermissionDenied("No or invalid key provided.")
 
