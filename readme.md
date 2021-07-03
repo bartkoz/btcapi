@@ -1,1 +1,1 @@
-Fill in secrets in docker-compose, `docker-compose up -d` and you are ready to go!
+Fill in env vars in docker-compose, `docker-compose up -d` and you are ready to go!
