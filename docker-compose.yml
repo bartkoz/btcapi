@@ -13,7 +13,9 @@ x-common-variables: &common-variables
   DB_HOST: 'postgres'
   DB_PORT: '5432'
   DB_CONN_MAX_AGE: '2000'
+  # 3rd party API key
   SERVICE_API_KEY: ''
+  # access key to local API
   API_KEY: ''
   DJANGO_SETTINGS_MODULE: 'btcapi.settings'
 
